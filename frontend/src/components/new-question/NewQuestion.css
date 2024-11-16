@@ -1,0 +1,13 @@
+#new-question-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#new-question-form div {
+    text-align: left;
+}
+
+#question-text {
+    width: 100%;
+}

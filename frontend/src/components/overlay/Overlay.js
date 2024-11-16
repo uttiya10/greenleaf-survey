@@ -1,11 +1,10 @@
-import { useEffect } from 'react';
 import './Overlay.css'
 import { OVERLAY_TOGGLE, publish } from '../../util/events';
 
 export default function Overlay(title, innerContent) {
     return (
         <div class="overlay">
-            <button onClick={() => publish(OVERLAY_TOGGLE, { show: false })} class="overlay-close">X</button>
+            <span class="material-symbols-outlined overlay-close" onClick={() => publish(OVERLAY_TOGGLE, { show: false })}>close</span>
             <header>
                 <h2>{title}</h2>
             </header>
