@@ -1,0 +1,8 @@
+.fab-btn {
+    border-radius: 20%;
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+}

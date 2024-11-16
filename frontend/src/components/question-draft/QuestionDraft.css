@@ -1,0 +1,5 @@
+.faded-out input:not(.overlay-input), 
+.faded-out button:not(.overlay-input),
+.faded-out textarea:not(.overlay-input){
+    opacity: 0.2;
+}

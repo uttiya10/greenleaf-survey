@@ -1,0 +1,20 @@
+.overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    border-radius: 10%;
+    background-color: white;
+    border: 1px solid #333;
+    padding: 20px 40px 30px;
+    box-shadow: #888 1px 2px;
+    text-align: center;
+}
+
+.overlay-close {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    text-align: center;
+    background-color: white;
+}
