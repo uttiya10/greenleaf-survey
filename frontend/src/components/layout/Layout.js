@@ -6,7 +6,7 @@ export default function Layout() {
             <nav>
                 <ul>
                     <li>
-                        <Link to="/">Saved Surveys</Link>
+                        <Link to="/saved">Saved Surveys</Link>
                     </li>
                     <li>
                         <Link to="/create">Create Survey</Link>

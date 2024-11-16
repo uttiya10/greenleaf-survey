@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from './components/layout/Layout';
 import Home from './components/home/Home'
 import CreateSurvey from './components/create-survey/CreateSurvey';
+import SavedSurveys, { SurveyList } from './components/saved-surveys/SavedSurveys';
 import { useEffect } from 'react';
 import { OVERLAY_TOGGLE, subscribe } from './util/events';
 
@@ -23,6 +24,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />}/>
           <Route path='create' element={<CreateSurvey />}/>
+          <Route path='saved' element={<SurveyList />}/>
         </Route>
       </Routes>
     </BrowserRouter>
