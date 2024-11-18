@@ -12,17 +12,21 @@ def create_survey(request):
         name = serializer.validated_data['name']
         description = serializer.validated_data['description']
 
-        # Use raw SQL to insert into the database
+        # Use raw SQL to insert into the database and retrieve the last inserted Survey_ID
         with connection.cursor() as cursor:
             cursor.execute(
                 "INSERT INTO mydb.Surveys (name, description) VALUES (%s, %s)",
                 [name, description]
             )
+            cursor.execute("SELECT LAST_INSERT_ID()")  # Retrieve the Survey_ID of the last inserted survey
+            survey_id = cursor.fetchone()[0]
 
-        return Response({"message": "Survey created successfully"}, status=status.HTTP_201_CREATED)
+        # Return the Survey_ID along with the success message
+        return Response({"message": "Survey created successfully", "survey_id": survey_id}, status=status.HTTP_201_CREATED)
 
     # Return validation errors if the input is invalid
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET'])
 def list_surveys(request):
@@ -285,4 +289,117 @@ def add_multiple_choice_response(request):
 
     except Exception as e:
         # Handle any errors that occur during the database operations
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['GET'])
+def get_responses(request, survey_id):
+    try:
+        with connection.cursor() as cursor:
+            # Retrieve the survey details
+            survey_query = """
+                SELECT name, description
+                FROM mydb.Surveys
+                WHERE Survey_ID = %s
+            """
+            cursor.execute(survey_query, [survey_id])
+            survey = cursor.fetchone()
+
+            if not survey:
+                return Response({"error": "Survey not found."}, status=status.HTTP_404_NOT_FOUND)
+
+            survey_data = {
+                "survey_id": survey_id,
+                "title": survey[0],
+                "description": survey[1],
+                "multiple-choice-questions": [],
+                "textual-questions": []
+            }
+
+            # Fetch all questions for the survey
+            questions_query = """
+                SELECT q.SurveyPosition, q.QuestionText
+                FROM mydb.Question q
+                WHERE q.Surveys_Survey_ID = %s
+                ORDER BY q.SurveyPosition
+            """
+            cursor.execute(questions_query, [survey_id])
+            questions = cursor.fetchall()
+
+            for question in questions:
+                survey_position, question_text = question
+
+                # Check for multiple-choice questions
+                mc_question_query = """
+                    SELECT mcq.MaxSelectionNumber
+                    FROM mydb.MultipleChoiceQuestion mcq
+                    WHERE mcq.Question_SurveyPosition = %s AND mcq.Surveys_Survey_ID = %s
+                """
+                cursor.execute(mc_question_query, [survey_position, survey_id])
+                mc_result = cursor.fetchone()
+
+                if mc_result:
+                    # It's a multiple-choice question
+                    mc_question = {
+                        "question_text": question_text,
+                        "survey_position": survey_position,
+                        "multiple-choice-options": [],
+                        "multiple-choice-responses": []
+                    }
+
+                    # Retrieve the options
+                    options_query = """
+                        SELECT OptionPosition, OptionText
+                        FROM mydb.MultipleChoiceOption
+                        WHERE Question_SurveyPosition = %s AND Surveys_Survey_ID = %s
+                        ORDER BY OptionPosition
+                    """
+                    cursor.execute(options_query, [survey_position, survey_id])
+                    options = cursor.fetchall()
+                    mc_question["multiple-choice-options"] = [opt[1] for opt in options]
+
+                    # Retrieve the responses
+                    responses_query = """
+                        SELECT SelectedOption
+                        FROM mydb.MultipleChoiceResponse
+                        WHERE Question_SurveyPosition = %s AND Surveys_Survey_ID = %s
+                    """
+                    cursor.execute(responses_query, [survey_position, survey_id])
+                    responses = cursor.fetchall()
+                    mc_question["multiple-choice-responses"] = [resp[0] for resp in responses]
+
+                    survey_data["multiple-choice-questions"].append(mc_question)
+
+                # Check for textual questions
+                else:
+                    textual_question_query = """
+                        SELECT tq.CharLimit
+                        FROM mydb.TextualQuestion tq
+                        WHERE tq.Question_SurveyPosition = %s AND tq.Surveys_Survey_ID = %s
+                    """
+                    cursor.execute(textual_question_query, [survey_position, survey_id])
+                    tq_result = cursor.fetchone()
+
+                    if tq_result:
+                        # It's a textual question
+                        textual_question = {
+                            "question_text": question_text,
+                            "survey_position": survey_position,
+                            "textual-responses": []
+                        }
+
+                        # Retrieve the responses
+                        textual_responses_query = """
+                            SELECT ResponseText
+                            FROM mydb.TextualResponse
+                            WHERE Question_SurveyPosition = %s AND Surveys_Survey_ID = %s
+                        """
+                        cursor.execute(textual_responses_query, [survey_position, survey_id])
+                        responses = cursor.fetchall()
+                        textual_question["textual-responses"] = [resp[0] for resp in responses]
+
+                        survey_data["textual-questions"].append(textual_question)
+
+        return Response(survey_data, status=status.HTTP_200_OK)
+
+    except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
