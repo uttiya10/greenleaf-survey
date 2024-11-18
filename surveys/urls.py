@@ -10,4 +10,5 @@ urlpatterns = [
     path('questions/<int:survey_id>/', views.get_questions_by_survey, name='get_questions_by_survey'),
     path('add-textual-response/', views.add_textual_response, name='add_textual_response'),
     path('add-multiple-choice-response/', views.add_multiple_choice_response, name='add_multiple_choice_response'),
+    path('get-responses/<int:survey_id>/', views.get_responses, name='get_responses'),
 ]
