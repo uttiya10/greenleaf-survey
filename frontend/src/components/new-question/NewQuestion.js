@@ -1,4 +1,4 @@
-import { MultipleChoiceQuestion, Question } from "../../model/question";
+import { MultipleChoiceQuestion, TextualQuestion } from "../../model/question";
 import { OVERLAY_TOGGLE, publish } from "../../util/events";
 import './NewQuestion.css';
 
@@ -6,9 +6,12 @@ export default function NewQuestion(setQuestions) {
     function onSubmit() {
         setQuestions(questions => {
             var questionName = document.getElementById("question-text").value;
+            if (!questionName) {
+                return questions;
+            }
             if (document.getElementById("textual").checked) {
                 publish(OVERLAY_TOGGLE, {show: false});
-                return questions.concat(new Question(questionName));
+                return questions.concat(new TextualQuestion(questionName, 500));
             } else if (document.getElementById("mc").checked) {
                 publish(OVERLAY_TOGGLE, {show: false});
                 return questions.concat(

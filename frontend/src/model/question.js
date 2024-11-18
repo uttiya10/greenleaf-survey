@@ -4,6 +4,13 @@ export class Question {
     }
 }
 
+export class TextualQuestion extends Question{
+    constructor(text, charLimit) {
+        super(text);
+        this.charLimit = charLimit;
+    }
+}
+
 export class MultipleChoiceQuestion extends Question {
     constructor (text, options, name) {
         super(text);
