@@ -8,6 +8,7 @@ const SurveyEntry = () => {
 
     // Fetch survey details
     useEffect(() => {
+        console.log("Sending Response");
         fetch(`http://localhost:8000/api/surveys/questions/${id}/`)
             .then((res) => res.json())
             .then((data) => setSurvey(data))
