@@ -31,7 +31,7 @@ function CreateSurvey() {
         })
     }
     
-    async function submitQuestion(question, idx) {
+    async function submitQuestion(question, idx, surveyID) {
         debugger;
         if (question instanceof MultipleChoiceQuestion) {
             return fetch('http://127.0.0.1:8000/api/surveys/add-multiple-choice-question/', {
@@ -42,7 +42,7 @@ function CreateSurvey() {
                 body: JSON.stringify({
                     'SurveyPosition': idx,
                     'QuestionText': question.text,
-                    'Surveys_Survey_ID': 1,
+                    'Surveys_Survey_ID': surveyID,
                     'MaxSelectionNumber': 1,
                     'Options': question.options
                 })
@@ -57,7 +57,7 @@ function CreateSurvey() {
                     'SurveyPosition': idx,
                     'QuestionText': question.text,
                     "CharLimit": question.charLimit,
-                    'Surveys_Survey_ID': 1,
+                    'Surveys_Survey_ID': surveyID,
                 })
             });
         } else {
@@ -66,9 +66,9 @@ function CreateSurvey() {
     }
 
     async function submitSurvey(){
-        await submitNewSurveyRequest();
+        var response = await (await submitNewSurveyRequest()).json();
         for(var i = 0; i < questions.length; i++) {
-            await submitQuestion(questions[i], i);
+            await submitQuestion(questions[i], i, response.survey_id);
         }
     }
 
