@@ -107,9 +107,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`MultipleChoiceQuestion` (
   `MaxSelectionNumber` INT NOT NULL,
   `Question_SurveyPosition` INT NOT NULL,
   `Surveys_Survey_ID` INT NOT NULL,
-  UNIQUE INDEX `MaxSelectionNumber_UNIQUE` (`MaxSelectionNumber` ASC) VISIBLE,
-  INDEX `fk_MultipleChoiceQuestion_Question1_idx` (`Question_SurveyPosition` ASC) VISIBLE,
-  INDEX `fk_MultipleChoiceQuestion_Surveys1_idx` (`Surveys_Survey_ID` ASC) VISIBLE,
   PRIMARY KEY (`Surveys_Survey_ID`, `Question_SurveyPosition`),
   CONSTRAINT `fk_MultipleChoiceQuestion_Question1`
     FOREIGN KEY (`Surveys_Survey_ID`, `Question_SurveyPosition`)
@@ -128,10 +125,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`MultipleChoiceResponse` (
   `User_User_ID` INT NOT NULL,
   `Surveys_Survey_ID` INT NOT NULL,
   `Question_SurveyPosition` INT NOT NULL,
-  UNIQUE INDEX `SelectedOption_UNIQUE` (`SelectedOption` ASC) VISIBLE,
-  INDEX `fk_MultipleChoiceResponse_User1_idx` (`User_User_ID` ASC) VISIBLE,
-  INDEX `fk_MultipleChoiceResponse_Surveys1_idx` (`Surveys_Survey_ID` ASC) VISIBLE,
-  INDEX `fk_MultipleChoiceResponse_Question1_idx` (`Question_SurveyPosition` ASC) VISIBLE,
   PRIMARY KEY (`User_User_ID`, `Surveys_Survey_ID`, `Question_SurveyPosition`),
   CONSTRAINT `fk_MultipleChoiceResponse_User1`
     FOREIGN KEY (`User_User_ID`)
@@ -182,9 +175,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Question` (
   `QuestionText` VARCHAR(255) NOT NULL,
   `Surveys_Survey_ID` INT NOT NULL,
   PRIMARY KEY (`Surveys_Survey_ID`, `SurveyPosition`),
-  UNIQUE INDEX `SurveyPosition_UNIQUE` (`SurveyPosition` ASC) VISIBLE,
-  UNIQUE INDEX `QuestionText_UNIQUE` (`QuestionText` ASC) VISIBLE,
-  INDEX `fk_Question_Surveys1_idx` (`Surveys_Survey_ID` ASC) VISIBLE,
   CONSTRAINT `fk_Question_Surveys1`
     FOREIGN KEY (`Surveys_Survey_ID`)
     REFERENCES `mydb`.`Surveys` (`Survey_ID`)
@@ -267,11 +257,10 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Survey_Response` (
   `Survery_ID` VARCHAR(255) NOT NULL,
   `User_ID` VARCHAR(255) NOT NULL,
   `Response_text` VARCHAR(1000) NOT NULL,
-  PRIMARY KEY (`Survey_Response_ID`),
-  UNIQUE INDEX `Response_ID_UNIQUE` (`Survey_Response_ID` ASC) VISIBLE,
-  UNIQUE INDEX `Survery_ID_UNIQUE` (`Survery_ID` ASC) VISIBLE,
-  UNIQUE INDEX `User_ID_UNIQUE` (`User_ID` ASC) VISIBLE)
+  PRIMARY KEY (`Survey_Response_ID`))
 ENGINE = InnoDB;
+
+DROP TABLE Survey_Response;
 
 DROP TABLE Surveys;
 -- -----------------------------------------------------
@@ -281,8 +270,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Surveys` (
   `Survey_ID` INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(64),
   description VARCHAR(64),
-  PRIMARY KEY (`Survey_ID`),
-  UNIQUE INDEX `Survey_ID_UNIQUE` (`Survey_ID` ASC) VISIBLE)
+  PRIMARY KEY (`Survey_ID`))
 ENGINE = InnoDB;
 
 
@@ -293,8 +281,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`TextualQuestion` (
   `CharLimit` INT NOT NULL,
   `Question_SurveyPosition` INT NOT NULL,
   `Surveys_Survey_ID` INT NOT NULL,
-  INDEX `fk_TextualQuestion_Question1_idx` (`Question_SurveyPosition` ASC) VISIBLE,
-  INDEX `fk_TextualQuestion_Surveys1_idx` (`Surveys_Survey_ID` ASC) VISIBLE,
   PRIMARY KEY (`Surveys_Survey_ID`, `Question_SurveyPosition`),
   CONSTRAINT `fk_TextualQuestion_Question1`
     FOREIGN KEY (`Surveys_Survey_ID`, `Question_SurveyPosition`)
