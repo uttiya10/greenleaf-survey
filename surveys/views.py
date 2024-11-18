@@ -137,18 +137,34 @@ def get_questions_by_survey(request, survey_id):
     
     try:
         with connection.cursor() as cursor:
+            # Retrieve survey details (name and description)
+            survey_query = """
+                SELECT name, description
+                FROM mydb.Surveys
+                WHERE Survey_ID = %s
+            """
+            cursor.execute(survey_query, [survey_id])
+            survey = cursor.fetchone()
+            
+            if not survey:
+                return Response({"error": "Survey not found."}, status=status.HTTP_404_NOT_FOUND)
+            
+            survey_data = {
+                "title": survey[0],
+                "description": survey[1],
+                "questions": []
+            }
+
             # SQL query to retrieve questions related to the given Survey_ID
-            query = """
+            questions_query = """
                 SELECT q.SurveyPosition, q.QuestionText, q.Surveys_Survey_ID
                 FROM mydb.Question q
                 WHERE q.Surveys_Survey_ID = %s
                 ORDER BY q.SurveyPosition
             """
-            cursor.execute(query, [survey_id])
+            cursor.execute(questions_query, [survey_id])
             rows = cursor.fetchall()
 
-            questions = []
-            
             for row in rows:
                 question = {
                     "SurveyPosition": row[0],
@@ -198,13 +214,14 @@ def get_questions_by_survey(request, survey_id):
                         question["QuestionType"] = "Textual"
                         question["CharLimit"] = tq_result[0]
 
-                questions.append(question)
+                survey_data["questions"].append(question)
 
-        # Return the list of questions for the survey
-        return Response(questions, status=status.HTTP_200_OK)
+        # Return the survey details along with the questions
+        return Response(survey_data, status=status.HTTP_200_OK)
 
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 @api_view(['POST'])
