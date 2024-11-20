@@ -1,0 +1,21 @@
+.textual-responses-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    border-radius: 5px;
+    box-shadow: 2px 2px #444444;
+    border: 1px solid #999999;
+    width: 500px;
+    padding: 10px;
+}
+
+.textual-responses-item h3 {
+    text-align: center;
+}
+
+.text-responses-list {
+    max-height: 300px;
+    overflow-y: scroll;
+    width: 100%;
+}

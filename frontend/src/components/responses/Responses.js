@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { redirect, useParams } from "react-router-dom";
 import PieChart from "../piechart/PieChart";
+import TextualResponsesItem from "../textual-responses-item/TextualResponsesItem";
+import './Responses.css';
 
 export default function Responses() {
     const [responses, setResponses] = useState([]);
@@ -14,9 +16,8 @@ export default function Responses() {
         fetch('http://127.0.0.1:8000/api/surveys/get-responses/' + id + "/")
         .then(res => res.json())
         .then(data => {
-            setResponses(responses => {
-                console.log(data);
-                return data['multiple-choice-questions'];
+            setResponses(_responses => {
+                return data['multiple-choice-questions'].concat(data['textual-questions']);
             })
         });
 
@@ -24,7 +25,7 @@ export default function Responses() {
     }, []);
 
     return (
-        <div>
+        <div class="responses-list">
             {responses.map(res => {
                 if (res['multiple-choice-options']) {
                     var options = res['multiple-choice-options'];
@@ -40,6 +41,8 @@ export default function Responses() {
                         return obj;
                     });
                     return PieChart({ data: chartData, text: res['question_text'] })
+                } else if (res['textual-responses']) {
+                    return TextualResponsesItem({ text: res['question_text'], responses: res['textual-responses'], position: res['survey_position']});
                 }
                 return null;
             })}
