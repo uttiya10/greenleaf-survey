@@ -32,7 +32,6 @@ function CreateSurvey() {
     }
     
     async function submitQuestion(question, idx, surveyID) {
-        debugger;
         if (question instanceof MultipleChoiceQuestion) {
             return fetch('http://127.0.0.1:8000/api/surveys/add-multiple-choice-question/', {
                 method: 'POST',
@@ -83,10 +82,10 @@ function CreateSurvey() {
                 <label for="survey-descr">Survey Description</label>
                 <input type="text" name="survey-descr" id="survey-descr"/>
             </div>
-            <div>
+            <div class="questions-container">
                 {questions.map(question => QuestionDraft(question, setQuestions))}
             </div>
-            <button onClick={() => submitSurvey()}>Submit Survey</button>
+            <button class="submit-survey" onClick={() => submitSurvey()}>Submit Survey</button>
 
             {Fab("add", () => { publish(OVERLAY_TOGGLE, { show: true }); })}
 
