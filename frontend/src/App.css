@@ -7,3 +7,10 @@
 .faded-out {
   background-color: #333;
 }
+
+.button {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+}
