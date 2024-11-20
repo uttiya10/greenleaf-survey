@@ -8,7 +8,6 @@ export default function QuestionDraft(question, setQuestions) {
         setQuestions(questions => {
             var questionIdx = questions.indexOf(mcq);
             var result = [...questions];
-            debugger;
             var optionTextSelectorID = mcq.name + "-new-option";
             var optionText = document.getElementById(optionTextSelectorID).value;
             result.splice(questionIdx, 1, 
@@ -18,7 +17,8 @@ export default function QuestionDraft(question, setQuestions) {
     }
 
     return (
-        <div>
+        <div class="question-container">
+            <span onClick={() => setQuestions(questions => questions.filter(q => q !== question))} class="material-symbols-outlined question-delete">close</span>
             <header>
                 <h2>{question.text}</h2>
             </header>
