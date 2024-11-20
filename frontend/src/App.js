@@ -7,6 +7,7 @@ import { SurveyList } from './components/saved-surveys/SavedSurveys';
 import SurveyEntry from './components/survey-entry/SurveyEntry';
 import { useEffect } from 'react';
 import { OVERLAY_TOGGLE, subscribe } from './util/events';
+import Responses from './components/responses/Responses';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
           <Route path='create' element={<CreateSurvey />}/>
           <Route path='saved' element={<SurveyList />}/>
           <Route path="survey/:id" element={<SurveyEntry />}/>
+          <Route path="responses/:id" element={<Responses />}/>
         </Route>
       </Routes>
     </BrowserRouter>

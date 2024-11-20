@@ -73,6 +73,7 @@ export const SurveyList = () => {
                                     borderRadius: "4px",
                                     cursor: "pointer",
                                 }}
+                                onClick={() => navigate('/responses/' + survey.id)}
                             >
                                 Responses
                             </button>
