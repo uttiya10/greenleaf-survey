@@ -1,46 +1,45 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { redirect, useParams } from "react-router-dom";
 import PieChart from "../piechart/PieChart";
 
 export default function Responses() {
-    var responsesInfo = null;
-    var responses = [];
+    const [responses, setResponses] = useState([]);
     const { id } = useParams(); 
 
-    async function getResponses() {
-        return (await (await fetch('http://127.0.0.1:8000/api/surveys/get-responses/' + id, {
-            method: 'GET',
-            headers: {
-                "Accepts": "application/json"
-            },
-        })).json());
-    }
-
     useEffect(() => {
-        if (!id) {
-            return redirect('/');
-        }
-        responsesInfo = getResponses();
-        debugger;
-        responses = responses.concat(responses['multiple-choice-questions']).concat(responses['textual-questions']);
-        responses.sort((r1, r2) => r1['survey-position'] - r2['survey-position']);
-    });
+        // if (!id) {
+        //     return redirect('/');
+        // }
+        //debugger;
+        fetch('http://127.0.0.1:8000/api/surveys/get-responses/' + id + "/")
+        .then(res => res.json())
+        .then(data => {
+            setResponses(responses => {
+                console.log(data);
+                return data['multiple-choice-questions'];
+            })
+        });
 
-    if (!responses) {
-        return redirect('/');
-    }
+
+    }, []);
 
     return (
         <div>
             {responses.map(res => {
-                if (res['multiple-choice-responses']) {
+                if (res['multiple-choice-options']) {
                     var options = res['multiple-choice-options'];
+                    var mcResponses = res['multiple-choice-responses'];
                     var optionsFreq = [...options].map(_option => 0);
-                    for (var i = 0; i < options.length; i++) {
-                        optionsFreq[i]++;
+                    for (var i = 0; i < mcResponses.length; i++) {
+                        optionsFreq[mcResponses[i]]++;
                     }
-                    var chartData = Object.fromEntries(options.map((option, i) => [option, optionsFreq[i]]));
-                    return PieChart({ data: chartData })
+                    var chartData = options.map((option, i) => {
+                        var obj = {};
+                        obj['label'] = option;
+                        obj['value'] = optionsFreq[i];
+                        return obj;
+                    });
+                    return PieChart({ data: chartData, text: res['question_text'] })
                 }
                 return null;
             })}

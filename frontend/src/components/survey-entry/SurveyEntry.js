@@ -25,6 +25,7 @@ const SurveyEntry = () => {
 
     // Submit responses to the backend
     const submitResponses = () => {
+        var userID = 123;
         Object.entries(responses).forEach(([questionId, answer]) => {
             const question = survey.questions.find(
                 (q) => q.SurveyPosition === parseInt(questionId)
@@ -38,7 +39,7 @@ const SurveyEntry = () => {
                         ResponseText: answer,
                         Question_SurveyPosition: questionId,
                         Surveys_Survey_ID: id,
-                        User_User_ID: 123, // Replace with actual user ID
+                        User_User_ID: userID, // Replace with actual user ID
                     }),
                 }).catch((err) => console.error("Error submitting textual response:", err));
             } else if (question.QuestionType === "MultipleChoice") {
@@ -49,7 +50,7 @@ const SurveyEntry = () => {
                         SelectedOption: answer, // Submit option position
                         Question_SurveyPosition: questionId,
                         Surveys_Survey_ID: id,
-                        User_User_ID: 123, // Replace with actual user ID
+                        User_User_ID: userID, // Replace with actual user ID
                     }),
                 }).catch((err) => console.error("Error submitting multiple-choice response:", err));
             }
