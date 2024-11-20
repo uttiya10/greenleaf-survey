@@ -12,9 +12,9 @@ export class TextualQuestion extends Question{
 }
 
 export class MultipleChoiceQuestion extends Question {
-    constructor (text, options, name) {
+    constructor (text, options, id) {
         super(text);
         this.options = options;
-        this.name = name;
+        this.name = id;
     }
 }

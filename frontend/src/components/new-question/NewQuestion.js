@@ -5,17 +5,17 @@ import './NewQuestion.css';
 export default function NewQuestion(setQuestions) {
     function onSubmit() {
         setQuestions(questions => {
-            var questionName = document.getElementById("question-text").value;
-            if (!questionName) {
+            var questionText = document.getElementById("question-text").value;
+            if (!questionText) {
                 return questions;
             }
             if (document.getElementById("textual").checked) {
                 publish(OVERLAY_TOGGLE, {show: false});
-                return questions.concat(new TextualQuestion(questionName, 500));
+                return questions.concat(new TextualQuestion(questionText, 500));
             } else if (document.getElementById("mc").checked) {
                 publish(OVERLAY_TOGGLE, {show: false});
                 return questions.concat(
-                    new MultipleChoiceQuestion(questionName, [], "hello-world")
+                    new MultipleChoiceQuestion(questionText, [], "question_" + questions.length)
                 )
             } else {
                 return questions;

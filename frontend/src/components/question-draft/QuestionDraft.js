@@ -8,6 +8,7 @@ export default function QuestionDraft(question, setQuestions) {
         setQuestions(questions => {
             var questionIdx = questions.indexOf(mcq);
             var result = [...questions];
+            debugger;
             var optionTextSelectorID = mcq.name + "-new-option";
             var optionText = document.getElementById(optionTextSelectorID).value;
             result.splice(questionIdx, 1, 
