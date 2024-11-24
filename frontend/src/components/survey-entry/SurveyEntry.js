@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import "./SurveyEntry.css"; // Import the CSS file
 
 const SurveyEntry = () => {
     const { id } = useParams(); // Get survey ID from the URL
@@ -64,39 +65,41 @@ const SurveyEntry = () => {
     }
 
     return (
-        <div>
-            <h1>{survey.title}</h1>
-            <p>{survey.description}</p>
-            {survey.questions.map((question) => (
-                <div key={question.SurveyPosition}>
-                    <h3>{question.QuestionText}</h3>
-                    {question.QuestionType === "Textual" && (
-                        <textarea
-                            onChange={(e) =>
-                                handleResponseChange(question.SurveyPosition, e.target.value)
-                            }
-                        />
-                    )}
-                    {question.QuestionType === "MultipleChoice" &&
-                        question.Options.map((option) => (
-                            <label key={option.OptionPosition}>
-                                <input
-                                    type="radio" // Change to radio for single selection
-                                    name={`question-${question.SurveyPosition}`}
-                                    value={option.OptionPosition} // Use OptionPosition as the value
-                                    onChange={(e) =>
-                                        handleResponseChange(
-                                            question.SurveyPosition,
-                                            parseInt(e.target.value) // Store the position as a number
-                                        )
-                                    }
-                                />
-                                {option.OptionText}
-                            </label>
-                        ))}
-                </div>
-            ))}
-            <button onClick={submitResponses}>Submit</button>
+        <div className="survey-container">
+            <div>
+                <h1>{survey.title}</h1>
+                <p>{survey.description}</p>
+                {survey.questions.map((question) => (
+                    <div key={question.SurveyPosition}>
+                        <h3>{question.QuestionText}</h3>
+                        {question.QuestionType === "Textual" && (
+                            <textarea
+                                onChange={(e) =>
+                                    handleResponseChange(question.SurveyPosition, e.target.value)
+                                }
+                            />
+                        )}
+                        {question.QuestionType === "MultipleChoice" &&
+                            question.Options.map((option) => (
+                                <label key={option.OptionPosition}>
+                                    <input
+                                        type="radio" // Change to radio for single selection
+                                        name={`question-${question.SurveyPosition}`}
+                                        value={option.OptionPosition} // Use OptionPosition as the value
+                                        onChange={(e) =>
+                                            handleResponseChange(
+                                                question.SurveyPosition,
+                                                parseInt(e.target.value) // Store the position as a number
+                                            )
+                                        }
+                                    />
+                                    {option.OptionText}
+                                </label>
+                            ))}
+                    </div>
+                ))}
+                <button onClick={submitResponses}>Submit</button>
+            </div>
         </div>
     );
 };
