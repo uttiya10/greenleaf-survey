@@ -92,11 +92,10 @@ def add_multiple_choice_question(request):
     survey_position = request.data.get('SurveyPosition')
     question_text = request.data.get('QuestionText')
     surveys_survey_id = request.data.get('Surveys_Survey_ID')
-    max_selection_number = request.data.get('MaxSelectionNumber')
     options = request.data.get('Options')  # Options should be a list of strings
 
     # Validate that all required fields are provided
-    if not all([survey_position, question_text, surveys_survey_id, max_selection_number, options]):
+    if not all([survey_position, question_text, surveys_survey_id, options]):
         return Response(
             {"error": "SurveyPosition, QuestionText, Surveys_Survey_ID, MaxSelectionNumber, and Options are required fields."},
             status=status.HTTP_400_BAD_REQUEST
@@ -116,7 +115,7 @@ def add_multiple_choice_question(request):
                 INSERT INTO mydb.MultipleChoiceQuestion (MaxSelectionNumber, Question_SurveyPosition, Surveys_Survey_ID)
                 VALUES (%s, %s, %s)
             """
-            cursor.execute(multiple_choice_query, [max_selection_number, survey_position, surveys_survey_id])
+            cursor.execute(multiple_choice_query, [1, survey_position, surveys_survey_id])
 
             # Step 3: Insert each option into the MultipleChoiceOption table
             for idx, option_text in enumerate(options):
