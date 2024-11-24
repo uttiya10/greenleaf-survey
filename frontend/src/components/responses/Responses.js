@@ -30,10 +30,11 @@ export default function Responses() {
                 if (res['multiple-choice-options']) {
                     var options = res['multiple-choice-options'];
                     var mcResponses = res['multiple-choice-responses'];
-                    var optionsFreq = [...options].map(_option => 0);
-                    for (var i = 0; i < mcResponses.length; i++) {
-                        optionsFreq[mcResponses[i]]++;
-                    }
+                    const optionsFreq = mcResponses.reduce((freq, response) => {
+                        const adjustedIndex = response - 1; // Adjust for 1-based indexing
+                        freq[adjustedIndex] = (freq[adjustedIndex] || 0) + 1;
+                        return freq;
+                    }, []);                    
                     var chartData = options.map((option, i) => {
                         var obj = {};
                         obj['label'] = option;
