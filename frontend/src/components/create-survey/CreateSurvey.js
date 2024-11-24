@@ -67,7 +67,7 @@ function CreateSurvey() {
     async function submitSurvey(){
         var response = await (await submitNewSurveyRequest()).json();
         for(var i = 0; i < questions.length; i++) {
-            await submitQuestion(questions[i], i, response.survey_id);
+            await submitQuestion(questions[i], i + 1, response.survey_id);
         }
     }
 
