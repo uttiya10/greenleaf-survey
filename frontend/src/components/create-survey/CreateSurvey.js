@@ -69,6 +69,8 @@ function CreateSurvey() {
         for(var i = 0; i < questions.length; i++) {
             await submitQuestion(questions[i], i + 1, response.survey_id);
         }
+
+        alert("Survey submitted successfully!");
     }
 
     return (
